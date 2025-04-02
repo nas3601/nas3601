@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Character Counter</title>
+  </head>
+  <body>
+    <h1>Occurrences of a Character:</h1>
+    <input id="char" type="text" placeholder="Enter character">
+    <button onclick="updateCount()">Update Count</button>
+    <div id="count"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+    <script>
+      function updateCount() {
+        const char = document.getElementById('char').value;
+        if (char) {
+          fetch('/wiki/count.txt')
+            .then(response => response.text())
+            .then(text => {
+              const regex = new RegExp(char, 'g');
+              const count = (text.match(regex) || []).length;
+              document.getElementById('count').innerHTML = `Occurrences of '${char}': ${count}`;
+            });
+        }
+      }
+
+      // Initialize clipboard
+      var clip = new ClipboardJS('.copy-btn');
+
+      // Copy button functionality
+      function copyText() {
+        const textArea = document.createElement("textarea");
+        document.body.appendChild(textArea);
+        textArea.value = "Occurrences of a character: ";
+        textArea.select();
+        document.execCommand("Copy");
+        document.body.removeChild(textArea);
+
+        alert('Copied to clipboard!');
+      }
+    </script>
+  </body>
+</html>
